@@ -1,0 +1,36 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "PlayerProto";
+package playerProto;
+
+/** 玩家信息 */
+
+/** 玩家状态信息 */
+enum PlayerState {
+    //  在线
+    ONLINE = 0;
+    //  离线
+    OFFLINE = 1;
+    //  游戏中
+    IN_GAME = 2;
+}
+
+/** 基础玩家信息 */
+message SimplePlayerMsg {
+    //  玩家id
+    int64 player_id = 1;
+    //  玩家昵称
+    string nickname = 2;
+    //  玩家头像
+    string head_image = 3;
+    //  玩家状态
+    PlayerState state = 4;
+}
+
+/** 玩家信息 */
+message PlayerMsg {
+    //  玩家基础信息
+    SimplePlayerMsg simple_player = 1;
+    //  玩家房卡数量
+    int32 room_card_num = 2;
+}

@@ -1,0 +1,99 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "CoreProto";
+package coreProto;
+
+/** 基础消息 */
+
+/** 通讯消息 */
+message Message {
+    //  消息号
+    int32 cmd = 1;
+    //  消息体
+    bytes body = 2;
+}
+
+/** 基础数据类型 - int */
+message IntMsg {
+    int32 value = 1;
+}
+
+/** 基础数据类型 - long */
+message LongMsg {
+    int64 value = 1;
+}
+
+/** 基础数据类型 - double */
+message DoubleMsg {
+    double value = 1;
+}
+
+/** 基础数据类型 - float */
+message FloatMsg {
+    float value = 1;
+}
+
+/** 基础数据类型 - string */
+message StringMsg {
+    string value = 1;
+}
+
+/** 基础数据类型 - boolean */
+message BooleanMsg {
+    bool value = 1;
+}
+
+/** 基础数据类型 - int list */
+message IntsMsg {
+    repeated int32 value = 1;
+}
+
+/** 基础数据类型 - long list */
+message LongsMsg {
+    repeated int64 value = 1;
+}
+
+/** 基础数据类型 - string list */
+message StringsMsg {
+    repeated string value = 1;
+}
+
+/** 基础数据类型 - double list */
+message DoublesMsg {
+    repeated double value = 1;
+}
+
+/** 基础数据类型 - float list */
+message FloatsMsg {
+    repeated float value = 1;
+}
+
+/** 基础数据类型 - int int map */
+message IntIntMapMsg {
+    map<int32, int32> value = 1;
+}
+
+/** 基础数据类型 - int long map */
+message IntLongMapMsg {
+    map<int32, int64> value = 1;
+}
+
+/** 基础数据类型 - int string map */
+message IntStringMapMsg {
+    map<int32, string> value = 1;
+}
+
+/** 基础数据类型 - long long map */
+message LongLongMapMsg {
+    map<int64, int64> value = 1;
+}
+
+/** 基础数据类型 - long int map */
+message LongIntMapMsg {
+    map<int64, int32> value = 1;
+}
+
+/** 基础数据类型 - long string map */
+message LongStringMapMsg {
+    map<int64, string> value = 1;
+}

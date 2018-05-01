@@ -1,0 +1,23 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "RoomProto";
+package roomProto;
+
+import "player.proto";
+import "game.proto";
+
+/** 房间消息 */
+message RoomMsg {
+    //  房间id
+    int32 room_id = 1;
+    //  房间玩家
+    repeated RoomPlayer players = 2;
+    //  游戏类型
+    gameProto.GameType game_type = 3;
+}
+
+/** 房间中玩家信息 */
+message RoomPlayer {
+    //  玩家基础信息
+    playerProto.SimplePlayerMsg simple_player = 1;
+}

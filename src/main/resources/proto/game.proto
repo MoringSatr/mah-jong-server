@@ -1,0 +1,18 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "GameProto";
+package gameProto;
+
+/** 游戏消息 */
+
+/** 游戏类型 */
+enum GameType {
+    //  推筒子
+    TUI_TONG_ZI = 0;
+    //  卡五星
+    KA_WU_XING = 1;
+    //  血流成河
+    XUE_LIU_CHENG_HE = 2;
+    //  血战到底
+    XUE_ZHAN_DAO_DI = 3;
+}

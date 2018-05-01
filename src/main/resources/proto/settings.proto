@@ -1,0 +1,14 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "SettingsProto";
+package settingsProto;
+
+/** 用户设置信息 */
+message SettingsMsg {
+    //  背景音乐
+    int32 background_music = 1;
+    //  音效
+    int32 sound_effect = 2;
+}
+
+

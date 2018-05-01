@@ -1,0 +1,27 @@
+syntax = "proto3";
+option java_package = "top.liubowen.proto";
+option java_outer_classname = "UserProto";
+package userProto;
+
+/** 用户信息 */
+message UserMsg {
+    //  用户id
+    int64 user_id = 1;
+    //  用户名称
+    string name = 2;
+    //  用户头像
+    string head_image = 3;
+    //  用户性别
+    Gender gender = 4;
+}
+
+enum Gender {
+    //  女
+    FEMALE = 0;
+    //  男
+    MALE = 1;
+    // 未知
+    UNKNOW = 3;
+}
+
+
