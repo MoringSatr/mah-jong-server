@@ -1,71 +1,74 @@
 package top.liubowen.event;
 
+import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.hoolai.util.collection.CollectionUtil;
-import com.hoolai.util.collection.IntHashMap;
-import com.hoolai.util.log.Log;
 
 /**
  * 
  * 事件容器
+ * 
  * @author luzj
  *
  */
+@Slf4j
 public class EventNotifyer implements ListenerRegistrator {
-    
-    private IntHashMap<List<EventListener>> listeners;
-    
+
+    private Map<Integer, List<EventListener>> listeners;
+
     public EventNotifyer() {
-        listeners = new IntHashMap<List<EventListener>>();
+        listeners = Maps.newHashMap();
     }
-    
+
     public synchronized void registListener(EventListener listener) {
         int eventType = listener.eventType();
         List<EventListener> list = this.listeners.get(eventType);
-        if(list == null) {
+        if (list == null) {
             list = new CopyOnWriteArrayList<>();
             this.listeners.put(eventType, list);
         }
-        
+
         list.add(listener);
     }
-    
+
     public void notifyEvent(Event event) {
         List<EventListener> list = this.listeners.get(event.eventType());
-        if(CollectionUtil.isEmpty(list)) {
+        if (CollectionUtils.isEmpty(list)) {
             return;
         }
         for (EventListener eventListener : list) {
             try {
                 eventListener.onEvent(event);
             } catch (Exception e) {
-                Log.error("Notify event:", e);
+                log.error("Notify event:", e);
             }
         }
     }
 
-	public synchronized void unregistListener(int unregistOccasion) {
-	    Collection<List<EventListener>> values = listeners.values();
-	    for (List<EventListener> list : values) {
-	        if(CollectionUtil.isEmpty(list)) {
-	            continue;
-	        }
-            for(Iterator<EventListener> it = list.iterator(); it.hasNext();) {
+    public synchronized void unregistListener(int unregistOccasion) {
+        Collection<List<EventListener>> values = listeners.values();
+        for (List<EventListener> list : values) {
+            if (CollectionUtils.isEmpty(list)) {
+                continue;
+            }
+            for (Iterator<EventListener> it = list.iterator(); it.hasNext();) {
                 EventListener next = it.next();
-                if(next.unregistOccasion() == unregistOccasion) {
+                if (next.unregistOccasion() == unregistOccasion) {
                     list.remove(next);
                 }
             }
         }
-	}
-	
-	public synchronized void unregistListener(EventListener listener) {
+    }
+
+    public synchronized void unregistListener(EventListener listener) {
         List<EventListener> list = listeners.get(listener.unregistOccasion());
-        if(!CollectionUtil.isEmpty(list))
+        if (!CollectionUtils.isEmpty(list))
             list.remove(listener);
     }
 

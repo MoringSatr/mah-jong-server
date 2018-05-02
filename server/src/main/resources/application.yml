@@ -1,0 +1,4 @@
+socket:
+  server:
+    host: localhost
+    port: 9088
