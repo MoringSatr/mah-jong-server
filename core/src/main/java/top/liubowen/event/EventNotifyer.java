@@ -20,9 +20,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class EventNotifyer implements ListenerRegistrator {
 
+    private static EventNotifyer instance;
+
+    public static EventNotifyer getInstance() {
+        if (instance == null) {
+            instance = new EventNotifyer();
+        }
+        return instance;
+    }
+
     private Map<Integer, List<EventListener>> listeners;
 
-    public EventNotifyer() {
+    private EventNotifyer() {
         listeners = Maps.newHashMap();
     }
 

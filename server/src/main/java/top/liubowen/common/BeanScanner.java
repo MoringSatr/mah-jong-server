@@ -8,7 +8,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import top.liubowen.annotation.Cmd;
 import top.liubowen.common.cmd.CmdContext;
-import top.liubowen.common.cmd.ICmd;
+import top.liubowen.common.cmd.Command;
 
 /**
  * @author liubowen
@@ -42,13 +42,12 @@ public class BeanScanner implements BeanPostProcessor {
         if (cmd == null) {
             return;
         }
-        if (!ArrayUtils.contains(clazz.getInterfaces(), ICmd.class)) {
+        if (!ArrayUtils.contains(clazz.getInterfaces(), Command.class)) {
             log.error("CmdAnnotation not ICmd , className : {}", clazz.getName());
             return;
         }
-        final int cmdCode = cmd.value();
         try {
-            cmdContext.addCmd(cmdCode, (ICmd) bean);
+            cmdContext.add((Command) bean);
         } catch (Exception e) {
             e.printStackTrace();
         }

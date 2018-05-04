@@ -1,8 +1,9 @@
 package top.liubowen;
 
+import top.liubowen.annotation.ClientProtocolType;
 import top.liubowen.annotation.Comment;
 import top.liubowen.annotation.Element;
-import top.liubowen.annotation.ProtocolType;
+import top.liubowen.annotation.ServerProtocolType;
 import top.liubowen.proto.CoreProto.LongMsg;
 import top.liubowen.proto.UserProto.UserMsg;
 
@@ -14,18 +15,18 @@ import top.liubowen.proto.UserProto.UserMsg;
 
 public interface UserProtocol {
 
-    @ProtocolType({ 10001, 10500 })
+    @ClientProtocolType({ 10001, 10500 })
     interface Client {
         @Comment("用户登陆请求")
         @Element(LongMsg.class)
-        short USER_LOGIN_REQ = 10001;
+        int USER_LOGIN_REQ = 10001;
     }
 
-    @ProtocolType({ 20001, 20500 })
+    @ServerProtocolType({ 20001, 20500 })
     interface Server {
         @Comment("用户登陆返回")
         @Element(UserMsg.class)
-        short USER_LOGIN_RET = 20001;
+        int USER_LOGIN_RET = 20001;
     }
 
 }

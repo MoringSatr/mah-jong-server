@@ -1,14 +1,14 @@
 package top.liubowen.common.dispatcher;
 
+import com.corundumstudio.socketio.AckRequest;
+import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.annotation.OnConnect;
+import com.corundumstudio.socketio.annotation.OnDisconnect;
+import com.corundumstudio.socketio.annotation.OnEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.corundumstudio.socketio.SocketIOClient;
-import com.google.protobuf.InvalidProtocolBufferException;
-
-import lombok.extern.slf4j.Slf4j;
 import top.liubowen.common.cmd.CmdContext;
-import top.liubowen.common.cmd.ICmd;
 import top.liubowen.common.session.Session;
 import top.liubowen.common.session.SessionContext;
 import top.liubowen.proto.CoreProto.Message;
@@ -27,19 +27,22 @@ public class MessageDispatcher {
     @Autowired
     private CmdContext cmdContext;
 
+    @OnConnect
     public void onConnect(SocketIOClient client) {
         Session session = Session.get(client);
         sessionContext.add(session);
         log.info("【一个客户端加入连接】sessionId : {}", session.sessionId());
     }
 
+    @OnDisconnect
     public void onDisconnect(SocketIOClient client) {
         Session session = Session.get(client);
         sessionContext.remove(session.sessionId());
         log.info("【一个客户端断开连接】sessionId : {}", session.sessionId());
     }
 
-    public void onMessage(SocketIOClient client, byte[] data) {
+    @OnEvent(value = "message")
+    public void onMessage(SocketIOClient client, AckRequest request, byte[] data) {
         Session session = Session.get(client);
         try {
             Message message = Message.parseFrom(data);
@@ -47,12 +50,7 @@ public class MessageDispatcher {
                 log.info("【一个客户端发送消息，消息为空】sessionId : {}", session.sessionId());
                 return;
             }
-            ICmd cmd = cmdContext.getCmd(message.getCmd());
-            if (cmd == null) {
-                log.info("【一个客户端发送消息，未找到cmd】sessionId : {}， cmd : {}", session.sessionId(), message.getCmd());
-                return;
-            }
-            cmd.execute(session, message);
+            cmdContext.execute(session, message);
         } catch (Exception e) {
             e.printStackTrace();
             log.info("【一个客户端发送消息，消息解析失败】sessionId : {}", session.sessionId());
