@@ -9,8 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.liubowen.common.cmd.CmdContext;
-import top.liubowen.common.session.Session;
-import top.liubowen.common.session.SessionContext;
+import top.liubowen.common.session.ISession;
+import top.liubowen.common.session.PlayerSession;
+import top.liubowen.common.session.PlayerSessionContext;
 import top.liubowen.proto.CoreProto.Message;
 
 /**
@@ -23,38 +24,37 @@ import top.liubowen.proto.CoreProto.Message;
 public class MessageDispatcher {
 
     @Autowired
-    private SessionContext sessionContext;
+    private PlayerSessionContext sessionContext;
     @Autowired
     private CmdContext cmdContext;
 
     @OnConnect
     public void onConnect(SocketIOClient client) {
-        Session session = Session.get(client);
-        sessionContext.add(session);
-        log.info("【一个客户端加入连接】sessionId : {}", session.sessionId());
+        ISession session = PlayerSession.get(client);
+        // sessionContext.add(session);
+        log.debug("【一个客户端加入连接】sessionId : {}", session.sessionId());
     }
 
     @OnDisconnect
     public void onDisconnect(SocketIOClient client) {
-        Session session = Session.get(client);
+        ISession session = PlayerSession.get(client);
         sessionContext.remove(session.sessionId());
-        log.info("【一个客户端断开连接】sessionId : {}", session.sessionId());
+        log.debug("【一个客户端断开连接】sessionId : {}", session.sessionId());
     }
 
     @OnEvent(value = "message")
     public void onMessage(SocketIOClient client, AckRequest request, byte[] data) {
-        Session session = Session.get(client);
+        ISession session = PlayerSession.get(client);
         try {
             Message message = Message.parseFrom(data);
             if (message == null) {
-                log.info("【一个客户端发送消息，消息为空】sessionId : {}", session.sessionId());
+                log.debug("【一个客户端发送消息，消息为空】sessionId : {}", session.sessionId());
                 return;
             }
             cmdContext.execute(session, message);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.info("【一个客户端发送消息，消息解析失败】sessionId : {}", session.sessionId());
+            log.error("【一个客户端发送消息，消息解析失败】sessionId : {}", session.sessionId(), e);
         }
-        log.info("【一个客户端发送消息】sessionId : {}", session.sessionId());
+        log.debug("【一个客户端发送消息】sessionId : {}", session.sessionId());
     }
 }

@@ -1,12 +1,14 @@
-package top.liubowen.common;
+package top.liubowen.core;
 
 import top.liubowen.proto.CoreProto.Message;
 
 /**
  * @author liubowen
  * @date 2018/5/4 14:29
- * @description 发送消息
+ * @description 消息发送器接口
  */
-public interface Sender {
+public interface IMessageSender {
+
     void send(Message message);
+
 }

@@ -2,8 +2,8 @@ package top.liubowen.game.player.domain;
 
 import top.liubowen.action.ActionExecutor;
 import top.liubowen.action.ActionQueue;
-import top.liubowen.common.Sender;
-import top.liubowen.common.session.Session;
+import top.liubowen.common.session.ISession;
+import top.liubowen.core.IMessageSender;
 import top.liubowen.proto.CoreProto.Message;
 import top.liubowen.tools.ThreadPoolActionExecutor;
 
@@ -12,11 +12,11 @@ import top.liubowen.tools.ThreadPoolActionExecutor;
  * @date 2018/5/4 14:13
  * @description
  */
-public class GamePlayer implements Sender {
+public class GamePlayer implements IMessageSender {
 
     private ActionExecutor actionExecutor = new ThreadPoolActionExecutor(2, 2, "player");
 
-    private Session session;
+    private ISession session;
     private long playerId;
 
     public long playerId() {
@@ -32,7 +32,7 @@ public class GamePlayer implements Sender {
         session.send(message);
     }
 
-    public GamePlayer(Session session, long playerId) {
+    public GamePlayer(ISession session, long playerId) {
         this.session = session;
         this.playerId = playerId;
     }

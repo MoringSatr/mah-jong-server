@@ -1,6 +1,6 @@
 package top.liubowen.common.cmd;
 
-import top.liubowen.common.session.Session;
+import top.liubowen.common.session.ISession;
 
 /**
  * @author liubowen
@@ -9,5 +9,5 @@ import top.liubowen.common.session.Session;
  */
 public interface Command<T> {
 
-    void execute(Session session, T message) throws Exception;
+    void execute(ISession playerSession, T message) throws Exception;
 }

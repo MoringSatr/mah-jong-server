@@ -1,10 +1,12 @@
 package top.liubowen.common.cmd;
 
-import com.google.protobuf.MessageLite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.google.protobuf.MessageLite;
+
 import top.liubowen.common.player.GamePlayerLoader;
-import top.liubowen.common.session.Session;
+import top.liubowen.common.session.ISession;
 import top.liubowen.game.player.domain.GamePlayer;
 
 /**
@@ -19,11 +21,11 @@ public abstract class PlayerCommand<T extends MessageLite> implements Command<T>
     private GamePlayerLoader gamePlayerLoader;
 
     @Override
-    public void execute(Session session, T message) throws Exception {
-        if (!gamePlayerLoader.exists(session.userId())) {
+    public void execute(ISession session, T message) throws Exception {
+        if (!gamePlayerLoader.exists(session.id())) {
             return;
         }
-        GamePlayer player = gamePlayerLoader.getPlayer(session.userId());
+        GamePlayer player = gamePlayerLoader.getPlayer(session.id());
         exec(player, message);
     }
 

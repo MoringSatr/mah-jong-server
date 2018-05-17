@@ -7,10 +7,10 @@ import top.liubowen.UserProtocol.Client;
 import top.liubowen.UserProtocol.Server;
 import top.liubowen.annotation.Cmd;
 import top.liubowen.common.cmd.Command;
-import top.liubowen.common.session.Session;
+import top.liubowen.common.session.ISession;
 import top.liubowen.event.Event;
 import top.liubowen.event.EventListener;
-import top.liubowen.event.EventNotifyer;
+import top.liubowen.event.EventNotifier;
 import top.liubowen.game.player.domain.GamePlayer;
 import top.liubowen.proto.CoreProto.LongMsg;
 import top.liubowen.proto.CoreProto.Message;
@@ -29,12 +29,12 @@ public class PlayerLoginCmd implements Command<LongMsg> {
     private GamePlayerLoader gamePlayerLoader;
 
     @Override
-    public void execute(Session session, LongMsg message) throws Exception {
+    public void execute(ISession session, LongMsg message) throws Exception {
         long playerId = message.getValue();
         gamePlayerLoader.login(session, playerId);
-        session.login(playerId);
+        session.bind(playerId);
 
-        EventNotifyer.getInstance().registListener(new EventListener(10001) {
+        EventNotifier.getInstance().registListener(new EventListener(10001) {
             @Override
             public void onEvent(Event event) {
                 PlayerLoginEvent playerLoginEvent = event.cast();
@@ -46,7 +46,7 @@ public class PlayerLoginCmd implements Command<LongMsg> {
         });
 
         // 发送登陆成功事件
-        EventNotifyer.getInstance().notifyEvent(new PlayerLoginEvent(playerId));
+        EventNotifier.getInstance().notifyEvent(new PlayerLoginEvent(playerId));
 
     }
 

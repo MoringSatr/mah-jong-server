@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import top.liubowen.annotation.Cmd;
 import top.liubowen.common.invoker.DecodeInvoker;
 import top.liubowen.common.scanner.MessageClassContext;
-import top.liubowen.common.session.Session;
+import top.liubowen.common.session.ISession;
 import top.liubowen.proto.CoreProto.Message;
 
 import java.lang.reflect.Method;
@@ -74,18 +74,18 @@ public class CmdContext {
         return null;
     }
 
-    public void execute(Session session, Message message) throws Exception {
+    public void execute(ISession playerSession, Message message) throws Exception {
         int cmd = message.getCmd();
         ByteString bytes = message.getBody();
         Command command = this.get(cmd);
         DecodeInvoker decodeInvoker = this.getDecodeInvoker(cmd);
         if (decodeInvoker == null) {
-            command.execute(session, null);
+            command.execute(playerSession, null);
             return;
         }
         decodeInvoker = this.getDecodeInvoker(cmd);
         MessageLite messageLite = decodeInvoker.invoke(MessageLite.class, bytes);
-        command.execute(session, messageLite);
+        command.execute(playerSession, messageLite);
     }
 
 }
